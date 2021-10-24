@@ -17,6 +17,7 @@ namespace RenderVideo.ViewModels
         #region Command 
         public MyICommandParamter ListViewSeletedCommand { get; set; }
         public MyICommandParamter LoadedCommand { get; set; }
+        public MyICommandParamter ClosingCommand { get; set; }
         #endregion
 
         #region UserControl
@@ -27,10 +28,27 @@ namespace RenderVideo.ViewModels
         {
             ListViewSeletedCommand = new MyICommandParamter(OnListViewSelectedCommand);
             LoadedCommand = new MyICommandParamter(OnLoadedCommand);
+            ClosingCommand = new MyICommandParamter(OnClosingCommand);
 
             MainWindowModel = new Models.MainWindowModel();
             StatusModel = new Models.StatusModel();
 
+
+        }
+
+        private void OnClosingCommand(object obj)
+        {
+            var e = obj as System.ComponentModel.CancelEventArgs;
+            var result = MessageBox.Show("Do you want to exit?", "Exit", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if(result != MessageBoxResult.Yes)
+            {
+                e.Cancel = true;
+                return;
+            }
+            else
+            {
+                e.Cancel = false;
+            }
 
         }
 

@@ -8,6 +8,7 @@ using RenderVideo.Utils;
 using System.Windows.Media;
 using System.Windows;
 using System.IO;
+using System.Diagnostics;
 
 namespace RenderVideo.ViewModels
 {
@@ -21,6 +22,8 @@ namespace RenderVideo.ViewModels
         #region Command Property
         public MyICommandParamter SelectFileCommand { get; set; }
         public MyICommandParamter CreateVideoCommand { get; set; }
+        public MyICommandParamter OpenFileCommand { get; set; }
+        
         #endregion
         public VideoViewModel()
         {
@@ -29,6 +32,15 @@ namespace RenderVideo.ViewModels
 
             SelectFileCommand = new MyICommandParamter(OnSelectFileCommand);
             CreateVideoCommand = new MyICommandParamter(OnCreateVideoCommand);
+            OpenFileCommand = new MyICommandParamter(OnOpenFileCommand);
+        }
+
+        private void OnOpenFileCommand(object obj)
+        {
+            if (File.Exists(StatusModel.FilePath))
+            {
+                _ = Process.Start(new ProcessStartInfo(StatusModel.FilePath) { UseShellExecute = true });
+            }
         }
 
         private async void OnCreateVideoCommand(object obj)
@@ -40,13 +52,16 @@ namespace RenderVideo.ViewModels
             }
             StatusModel.IsEnable = false;
             StatusModel.Percent = 0;
-            await CreateVideo();
+            StatusModel.FilePath = "";
 
+            string _output = await CreateVideo();
+
+            StatusModel.FilePath = _output;
             StatusModel.IsEnable = true;
 
         }
 
-        private async Task CreateVideo(string _extension = ".mp4")
+        private async Task<string> CreateVideo(string _extension = ".mp4")
         {
             await Task.Delay(1);
 
@@ -57,34 +72,62 @@ namespace RenderVideo.ViewModels
             if (!_inputAudio.IsExists() || !_inputImage.IsExists())
             {
                 SetStatusText("File is not exists!", Brushes.Red);
+                return "";
             }
 
             string _dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "Render_Video");
             if (!Directory.Exists(_dir))
             {
-                Directory.CreateDirectory(_dir);
+                _ = Directory.CreateDirectory(_dir);
             }
-            string _output = Path.Combine(_dir, DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + _extension);
+
+            //get argurment
+            string _output1 = Path.Combine(_dir, DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + _extension);
             Models.VideoSettingModel videoSetting = await API.VideoSettingAPI.LoadSettingAsync();
             string _parameter = videoSetting.ToParameter();
-            string argument = $"-loop 1 -i \"{_inputImage}\" -i \"{_inputImage}\" -filter_complex \"[0:v]scale={videoSetting.Resolution}\" -shortest" +
-                $" {_parameter}   \"{_output}\""; ;
+            string argument = $" -loop 1 -i \"{_inputImage}\" -i \"{_inputAudio}\" -filter_complex \"[0:v]scale={videoSetting.Resolution}\" -shortest " +
+                $" {_parameter}   \"{_output1}\""; ;
 
-            IConversion convertsion = FFmpeg.Conversions.New();
-            convertsion.OnProgress += (_, args) =>
+            IConversion convertsion1 = FFmpeg.Conversions.New();
+            convertsion1.OnProgress += (_, args) =>
             {
+                //StatusModel.Percent = args.Percent;
                 StatusModel.Percent = args.Percent;
+
             };
             try
             {
-                _ = await convertsion.Start(argument);
-
+                SetStatusText("Create video ...", Brushes.Green);
+                _ = await convertsion1.Start(argument);
+                SetStatusText("Finish!", Brushes.Green);
             }
             catch (Exception)
             {
                 string _cantCreateVideo = Application.Current.Resources["CannotCreateVideo"].ToString();
                 SetStatusText(_cantCreateVideo, Brushes.Red);
+                _output1 = "";
             }
+
+            //loop Video
+            IMediaInfo mediaInfo = await FFmpeg.GetMediaInfo(_output1);
+            double _duration = mediaInfo.Duration.TotalSeconds;
+            VideoModel.NumberLoop = (int)(3600 / _duration) + 1;
+            string _output2 = Path.Combine(_dir, DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + _extension);
+            string _argurment2 = $" -stream_loop {VideoModel.NumberLoop} -i \"{_output1}\"  -c copy \"{_output2}\" ";
+            try
+            {
+                SetStatusText("Loop Video ...", Brushes.Green);
+                _ = await convertsion1.Start(_argurment2);
+                SetStatusText("Finish!", Brushes.Green);
+            }
+            catch (Exception)
+            {
+                string _cantCreateVideo = Application.Current.Resources["CannotCreateVideo"].ToString();
+                SetStatusText(_cantCreateVideo, Brushes.Red);
+                _output2 = "";
+            }
+
+            return _output2;
 
         }
 

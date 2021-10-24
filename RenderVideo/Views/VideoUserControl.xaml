@@ -1,12 +1,11 @@
 ﻿<UserControl x:Class="RenderVideo.Views.VideoUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:RenderVideo.ViewModels"
              xmlns:local="clr-namespace:RenderVideo.Views"
-             mc:Ignorable="d" 
-             >
+             mc:Ignorable="d">
     <UserControl.DataContext>
         <viewModels:VideoViewModel />
     </UserControl.DataContext>
@@ -34,8 +33,7 @@
                 <Setter Property="Width"
                         Value="250" />
             </Style>
-            <Style TargetType="TextBlock"
-                   >
+            <Style TargetType="TextBlock">
                 <Setter Property="VerticalAlignment"
                         Value="Center" />
                 <Setter Property="HorizontalAlignment"
@@ -58,9 +56,9 @@
                         Value="30" />
             </Style>
             <Style TargetType="ProgressBar">
-                
+
                 <Setter Property="Width"
-                        Value="300" />
+                        Value="400" />
                 <Setter Property="Height"
                         Value="30" />
             </Style>
@@ -103,123 +101,207 @@
             </Style>
         </Grid.Resources>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="50" />
             <RowDefinition />
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="50" />
         </Grid.RowDefinitions>
-        
+
         <!--tool bar-->
         <StackPanel Grid.Row="0"
                     Grid.ColumnSpan="2"
                     Orientation="Horizontal"
                     Background="#E3E5EA">
         </StackPanel>
-        
+
         <!--status bar-->
         <StackPanel Grid.Row="30"
                     Orientation="Horizontal"
                     Grid.ColumnSpan="2"
                     Background="#E3E5EA">
-            <TextBlock >
+            <TextBlock>
                     <Run Text="{DynamicResource Status}" />
                     <Run Text=":" />
             </TextBlock>
             <TextBlock Style="{StaticResource Content}">
                 <Run Text="{Binding StatusModel.Status}"
-                     Foreground="{Binding StatusModel.ForeGroundColor}"/>
+                     Foreground="{Binding StatusModel.ForeGroundColor}" />
             </TextBlock>
-        </StackPanel>
-        
-        <!--main -->
-        <Grid Grid.Row="1"
-              Margin="30"
-              Background="White">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition />
-            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <Grid>
+                    <TextBox  Text="{Binding StatusModel.FilePath}"
+                              IsReadOnly="True"
+                              Padding="5"
+                              AcceptsReturn="True"
+                              Width="250"
+                              Height="30"
+                              ToolTip="Ctrl + O"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Left"
+                              x:Name="txtFilePath" />
+                    <TextBlock IsHitTestVisible="False"
+                               FontStyle="Italic"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Left"
+                               Margin="10 0 0 0"
+                               Foreground="DarkGray">
 
-            <!--Introduction-->
-            <StackPanel Grid.Row="0"
-                        Orientation="Vertical">
-                <!--step 1 choose audio-->
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock>
-                        <Run Text="{DynamicResource Step}"/>
-                        <Run Text="1:"/>
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Visibility"
+                                        Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=txtFilePath}"
+                                                 Value="">
+                                        <Setter Property="Visibility"
+                                                Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                            <Run Text="{DynamicResource FileConverted}" />
+                            <Run Text="..." />
                     </TextBlock>
-                    <TextBlock Text="Choose Audio Path"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBox Text="{Binding VideoModel.InputAudioPath}"/>
-                    <Button Content="{DynamicResource Select}"
-                            Command="{Binding SelectFileCommand}"
-                            CommandParameter="InputAudioPath"
-                            IsEnabled="{Binding StatusModel.IsEnable}">
-                        
-                    </Button>
-                </StackPanel>
-                
-                <!--Choose image-->
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock>
+                </Grid>
+                <Button Content="{DynamicResource Open}"
+                        BorderThickness="0.5"
+                        Margin="0 5"
+                        ToolTip="Ctrl + O"
+                        Command="{Binding OpenFileCommand}" />
+            </StackPanel>
+        </StackPanel>
+
+        <!--main -->
+        <Border Grid.Row="1"
+                BorderThickness="0.5"
+                BorderBrush="DimGray"
+                Background="White">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <Grid Margin="30"
+                      >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <!--Introduction-->
+                    
+                        <!--step 1 choose audio-->
+                        <StackPanel Orientation="Vertical"
+                                    Grid.Row="0"
+                                    Grid.Column="0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock>
+                        <Run Text="{DynamicResource Step}" />
+                        <Run Text="1:" />
+                                </TextBlock>
+                                <TextBlock Text="Choose Audio Path" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox Text="{Binding VideoModel.InputAudioPath}" />
+                                <Button Content="{DynamicResource Select}"
+                                        Command="{Binding SelectFileCommand}"
+                                        CommandParameter="InputAudioPath"
+                                        IsEnabled="{Binding StatusModel.IsEnable}">
+
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!--Choose image-->
+
+                        <StackPanel Orientation="Vertical"
+                                Grid.Row="0"
+                                Grid.Column="1">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock>
                         <Run Text="{DynamicResource Step}" />
                         <Run Text="2:" />
-                    </TextBlock>
-                    <TextBlock Text="Choose Image Path" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBox Text="{Binding VideoModel.InputImagePath}" />
-                    <Button Content="{DynamicResource Select}"
-                            Command="{Binding SelectFileCommand}"
-                            CommandParameter="InputImagePath"
-                            IsEnabled="{Binding StatusModel.IsEnable}">
-                        
-                    </Button>
-                </StackPanel>
+                                </TextBlock>
+                                <TextBlock Text="Choose Image Path" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox Text="{Binding VideoModel.InputImagePath}"
+                                         Name="txtImage" />
+                                <Button Content="{DynamicResource Select}"
+                                        Command="{Binding SelectFileCommand}"
+                                        CommandParameter="InputImagePath"
+                                        IsEnabled="{Binding StatusModel.IsEnable}">
 
-                <!--Create video-->
-                <StackPanel Orientation="Vertical">
-                    <TextBlock>
+                                </Button>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Border Width="450"
+                                        Margin="5"
+                                        Height="300"
+                                        Background="Gray">
+                                    <Image Width="450"
+                                           Height="300"
+                                           Stretch="Fill"
+                                           Source="{Binding ElementName=txtImage, Path=Text}">
+
+                                    </Image>
+                                </Border>
+
+                            </StackPanel>
+                        </StackPanel>
+
+                       
+                       
+                    
+                    
+                    <!--action-->
+                    <StackPanel Grid.Row="1"
+                                Orientation="Vertical"
+                                >
+                        <!--Create video-->
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock>
                         <Run Text="{DynamicResource Step}" />
                         <Run Text="3:" />
                         <Run Text="Number Loop" />
-                    </TextBlock>
-                    <TextBox Text="{Binding VideoModel.NumberLoop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Width="100">
-                        
-                    </TextBox>
-                </StackPanel>
+                            </TextBlock>
+                            <TextBox Text="{Binding VideoModel.NumberLoop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Width="100">
 
-                <!--Create video-->
-                <StackPanel Orientation="Vertical">
-                    <TextBlock>
-                        <Run Text="{DynamicResource Step}" />
-                        <Run Text="4:" />
-                        <Run Text="Create Video"/>
-                    </TextBlock>
-                    <Button Content="Create Video"
-                            Command="{Binding CreateVideoCommand}"
-                            
-                            IsEnabled="{Binding StatusModel.IsEnable}">
-                        
-                    </Button>
-                    <Grid HorizontalAlignment="Left">
-                        <ProgressBar VerticalAlignment="Center"
-                                     Name="progressBar"
-                                     Minimum="0"
-                                     Maximum="100"
-                                     Value="{Binding StatusModel.Percent}">
-                            
-                        </ProgressBar>
-                        <TextBlock VerticalAlignment="Center"
-                                   HorizontalAlignment="Center">
-                            <Run Text="{Binding ElementName=progressBar, Path=Value}"/>
-                            <Run Text="%"/>
-                        </TextBlock>
-                    </Grid>
-                </StackPanel>
-            </StackPanel>
-        </Grid>
+                            </TextBox>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock>
+                                <Run Text="{DynamicResource Step}" />
+                                <Run Text="4:" />
+                                <Run Text="Create Video" />
+                            </TextBlock>
+                            <Button Content="Create Video"
+                                    Command="{Binding CreateVideoCommand}"
+                                    IsEnabled="{Binding StatusModel.IsEnable}">
+
+                            </Button>
+                            <Grid HorizontalAlignment="Left"
+                                  Margin="5">
+                                <ProgressBar VerticalAlignment="Center"
+                                             Name="progressBar"
+                                             Minimum="0"
+                                             Maximum="100"
+                                             Value="{Binding StatusModel.Percent}">
+
+                                </ProgressBar>
+                                <TextBlock VerticalAlignment="Center"
+                                           HorizontalAlignment="Center">
+                            <Run Text="{Binding ElementName=progressBar, Path=Value}" />
+                            <Run Text="%" />
+                                </TextBlock>
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </ScrollViewer>
+
+        </Border>
+
     </Grid>
 </UserControl>

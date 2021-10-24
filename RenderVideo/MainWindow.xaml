@@ -8,10 +8,10 @@
         xmlns:local="clr-namespace:RenderVideo"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        WindowState="Normal"
+        WindowState="Maximized"
         FontSize="14"
         Name="_this"
-        ResizeMode="NoResize"
+        ResizeMode="CanResizeWithGrip"
         Title="{Binding MainWindowModel.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
         Height="720" Width="1280">
     <behaviors:Interaction.Triggers>
@@ -19,6 +19,11 @@
                                 SourceObject="{Binding ElementName=_this}">
             <behaviors:InvokeCommandAction Command="{Binding LoadedCommand}"
                                            CommandParameter="{Binding ElementName=gridMain}" />
+        </behaviors:EventTrigger>
+        <behaviors:EventTrigger EventName="Closing"
+                                SourceObject="{Binding ElementName=_this}">
+            <behaviors:InvokeCommandAction Command="{Binding ClosingCommand}"
+                                           PassEventArgsToCommand="True" />
         </behaviors:EventTrigger>
     </behaviors:Interaction.Triggers>
     <Window.DataContext>
