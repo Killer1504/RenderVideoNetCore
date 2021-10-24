@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>icons8_vimeo.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Images\gear_50px.png" />
+    <None Remove="Images\help_color_50px.png" />
+    <None Remove="Images\video_50px.png" />
+    <None Remove="mydata.db" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="mydata.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.90" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115" />
+    <PackageReference Include="Xabe.FFmpeg" Version="5.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\gear_50px.png" />
+    <Resource Include="Images\help_color_50px.png" />
+    <Resource Include="Images\video_50px.png" />
+  </ItemGroup>
+
+</Project>

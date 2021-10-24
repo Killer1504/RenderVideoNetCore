@@ -1,0 +1,99 @@
+﻿<Window x:Class="RenderVideo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:RenderVideo.ViewModels"
+        xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:RenderVideo"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Normal"
+        FontSize="14"
+        Name="_this"
+        ResizeMode="NoResize"
+        Title="{Binding MainWindowModel.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+        Height="720" Width="1280">
+    <behaviors:Interaction.Triggers>
+        <behaviors:EventTrigger EventName="Loaded"
+                                SourceObject="{Binding ElementName=_this}">
+            <behaviors:InvokeCommandAction Command="{Binding LoadedCommand}"
+                                           CommandParameter="{Binding ElementName=gridMain}" />
+        </behaviors:EventTrigger>
+    </behaviors:Interaction.Triggers>
+    <Window.DataContext>
+        <viewModels:MainWindowViewModel />
+    </Window.DataContext>
+    <Grid Background="#E3E5EA">
+        <Grid.Resources>
+            <Style TargetType="ListViewItem">
+                <Setter Property="Margin"
+                        Value="0 5"/>
+            </Style>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0"
+              Grid.Column="1"
+              Background="White"
+              Name="gridMain">
+
+        </Grid>
+        
+        <Grid Grid.Row="0"
+              Grid.Column="0">
+            <ListView Background="Transparent"
+                      BorderThickness="0"
+                      Name="lvMenu"
+                      FontStyle="Normal">
+                <!--using behavior XamlBehaviorsWpf to binding command with event-->
+                <behaviors:Interaction.Triggers>
+                    <behaviors:EventTrigger EventName="SelectionChanged"
+                                            SourceObject="{Binding ElementName=lvMenu}">
+                        <behaviors:InvokeCommandAction Command="{Binding ListViewSeletedCommand}"
+                                                       CommandParameter="{Binding ElementName=lvMenu, Path=SelectedItem}" />
+                    </behaviors:EventTrigger>
+                </behaviors:Interaction.Triggers>
+                <ListView.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="VerticalAlignment"
+                                Value="Center" />
+                        <Setter Property="Margin"
+                                Value="5" />
+                    </Style>
+                    <Style TargetType="Image">
+                        <Setter Property="VerticalAlignment"
+                                Value="Center" />
+                        <Setter Property="Margin"
+                                Value="5" />
+                        <Setter Property="Width"
+                                Value="30" />
+                    </Style>
+                </ListView.Resources>
+
+                <ListViewItem Tag="VideoUserControl">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="./Images/video_50px.png" />
+                        <TextBlock Text="Video"/>
+                    </StackPanel>
+                </ListViewItem>
+                
+                <ListViewItem Tag="CommonSettingUserControl">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="./Images/gear_50px.png" />
+                        <TextBlock Text="Setting" />
+                    </StackPanel>
+                </ListViewItem>
+                
+                <ListViewItem Tag="HelpUserControl">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="./Images/help_color_50px.png" />
+                        <TextBlock Text="Help" />
+                    </StackPanel>
+                </ListViewItem>
+            </ListView>
+        </Grid>
+    </Grid>
+</Window>

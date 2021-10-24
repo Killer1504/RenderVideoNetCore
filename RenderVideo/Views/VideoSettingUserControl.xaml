@@ -1,0 +1,219 @@
+﻿<UserControl x:Class="RenderVideo.Views.VideoSettingUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RenderVideo.Views"
+             xmlns:viewModels="clr-namespace:RenderVideo.ViewModels"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             mc:Ignorable="d"
+             FontSize="16"
+             >
+    <UserControl.DataContext>
+        <viewModels:VideoSettingViewModel />
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="TextBlock"
+                   x:Key="Header">
+                <Setter Property="VerticalAlignment"
+                        Value="Center" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Right" />
+                <Setter Property="Margin"
+                        Value="5" />
+                <Setter Property="Width"
+                        Value="120" />
+            </Style>
+            <Style TargetType="TextBlock"
+                   x:Key="Content">
+                <Setter Property="VerticalAlignment"
+                        Value="Center" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Left" />
+                <Setter Property="Margin"
+                        Value="5" />
+                <Setter Property="Width"
+                        Value="250" />
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="VerticalContentAlignment"
+                        Value="Center" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Left" />
+                <Setter Property="Margin"
+                        Value="5" />
+                <Setter Property="Width"
+                        Value="250" />
+                <Setter Property="Height"
+                        Value="30" />
+            </Style>
+            <Style TargetType="CheckBox">
+                <Setter Property="VerticalContentAlignment"
+                        Value="Center" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Left" />
+                <Setter Property="Margin"
+                        Value="5" />
+
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="VerticalContentAlignment"
+                        Value="Center" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Left" />
+                <Setter Property="Margin"
+                        Value="5" />
+                <Setter Property="Width"
+                        Value="120" />
+                <Setter Property="Height"
+                        Value="30" />
+            </Style>
+            <Style TargetType="ComboBox">
+                <Setter Property="VerticalContentAlignment"
+                        Value="Center" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Left" />
+                <Setter Property="Margin"
+                        Value="5" />
+                <Setter Property="Width"
+                        Value="120" />
+                <Setter Property="Height"
+                        Value="30" />
+            </Style>
+            <Style TargetType="ComboBoxItem">
+                <Setter Property="FontSize"
+                        Value="14" />
+            </Style>
+        </Grid.Resources>
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    Background="White">
+            <!--video-->
+            <StackPanel Visibility="Visible"
+                        HorizontalAlignment="Left">
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource Header}">
+                                <Run Text="Video Encoder" />
+                                <Run Text=":" />
+                    </TextBlock>
+                    <ComboBox SelectedItem="{Binding VideoSettingModel.VideoEncoder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ComboBox.Items>
+                            <system:String>h264</system:String>
+                            <system:String>h264_amf</system:String>
+                            <system:String>h264_qsv</system:String>
+                            <system:String>h264_nvenc</system:String>
+                        </ComboBox.Items>
+                    </ComboBox>
+                    
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource Header}">
+                        <Run Text="Video Resolution" />
+                        <Run Text=":" />
+                    </TextBlock>
+                    <ComboBox SelectedItem="{Binding VideoSettingModel.Resolution, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ComboBox.Items>
+                            <system:String>1280x720</system:String>
+                            <system:String>1920x1080</system:String>
+                        </ComboBox.Items>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource Header}">
+                        <Run Text="Video Bitrate" />
+                        <Run Text=":" />
+                    </TextBlock>
+                    <ComboBox SelectedItem="{Binding VideoSettingModel.VideoBitrate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ComboBox.Items>
+                            <system:Int32>1500</system:Int32>
+                            <system:Int32>2000</system:Int32>
+                            <system:Int32>2500</system:Int32>
+                        </ComboBox.Items>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource Header}">
+                        <Run Text="Video FrameRate" />
+                        <Run Text=":" />
+                    </TextBlock>
+                    <ComboBox SelectedItem="{Binding VideoSettingModel.FrameRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ComboBox.Items>
+                            <system:Int32>24</system:Int32>
+                            <system:Int32>25</system:Int32>
+                            <system:Int32>30</system:Int32>
+                        </ComboBox.Items>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource Header}" />
+                    <Button Content="{DynamicResource Update}"
+                            Command="{Binding UpdateVideoSettingCommand}">
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+
+            <!--Audio-->
+            <StackPanel Visibility="Visible"
+                        Margin="50 0"
+                        HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource Header}">
+                        <Run Text="Audio Encoder" />
+                        <Run Text=":" />
+                    </TextBlock>
+                    <ComboBox SelectedItem="{Binding VideoSettingModel.AudioEncoder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ComboBox.Items>
+                            <system:String>aac</system:String>
+                            <system:String>ac3</system:String>
+                        </ComboBox.Items>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource Header}">
+                        <Run Text="Audio Bitrate" />
+                        <Run Text=":" />
+                    </TextBlock>
+                    <ComboBox SelectedItem="{Binding VideoSettingModel.AudioBitrate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ComboBox.Items>
+                            <system:Int32>128</system:Int32>
+                            <system:Int32>256</system:Int32>
+                            <system:Int32>320</system:Int32>
+                        </ComboBox.Items>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource Header}">
+                        <Run Text="Audio SampleRate" />
+                        <Run Text=":" />
+                    </TextBlock>
+                    <ComboBox SelectedItem="{Binding VideoSettingModel.AudioSampleRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ComboBox.Items>
+                            <system:Int32>44100</system:Int32>
+                            <system:Int32>48000</system:Int32>
+                        </ComboBox.Items>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource Header}">
+                                <Run Text="Audio Chanels" />
+                                <Run Text=":" />
+                    </TextBlock>
+                    <ComboBox SelectedItem="{Binding VideoSettingModel.AudioChanel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ComboBox.Items>
+                            <system:Int32>1</system:Int32>
+                            <system:Int32>2</system:Int32>
+                        </ComboBox.Items>
+                    </ComboBox>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>
