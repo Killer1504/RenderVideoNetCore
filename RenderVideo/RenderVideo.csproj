@@ -5,11 +5,15 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>icons8_vimeo.ico</ApplicationIcon>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+    <FileVersion>1.0.0.1</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Images\gear_50px.png" />
     <None Remove="Images\help_color_50px.png" />
+    <None Remove="Images\pause-button.png" />
+    <None Remove="Images\play-button.png" />
     <None Remove="Images\video_50px.png" />
     <None Remove="mydata.db" />
   </ItemGroup>
@@ -30,6 +34,8 @@
   <ItemGroup>
     <Resource Include="Images\gear_50px.png" />
     <Resource Include="Images\help_color_50px.png" />
+    <Resource Include="Images\pause-button.png" />
+    <Resource Include="Images\play-button.png" />
     <Resource Include="Images\video_50px.png" />
   </ItemGroup>
 

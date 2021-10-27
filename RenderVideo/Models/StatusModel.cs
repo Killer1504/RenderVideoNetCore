@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 using System.Windows.Media;
 
 namespace RenderVideo.Models
@@ -16,7 +13,6 @@ namespace RenderVideo.Models
         private int _executionTime;
         private string _filePath;
         private int _percent;
-
 
         public int Percent
         {
@@ -33,7 +29,7 @@ namespace RenderVideo.Models
 
         public string FilePath
         {
-            get =>_filePath;
+            get => _filePath;
             set
             {
                 if (_filePath != value)

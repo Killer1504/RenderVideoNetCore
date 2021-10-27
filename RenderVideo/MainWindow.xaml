@@ -8,12 +8,13 @@
         xmlns:local="clr-namespace:RenderVideo"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        WindowState="Maximized"
-        FontSize="14"
+        WindowState="Normal"
+        FontSize="18"
         Name="_this"
-        ResizeMode="CanResizeWithGrip"
-        Title="{Binding MainWindowModel.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-        Height="720" Width="1280">
+        Width="1280"
+        Height="750"
+        ResizeMode="NoResize"
+        Title="{Binding MainWindowModel.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
     <behaviors:Interaction.Triggers>
         <behaviors:EventTrigger EventName="Loaded"
                                 SourceObject="{Binding ElementName=_this}">
@@ -33,20 +34,19 @@
         <Grid.Resources>
             <Style TargetType="ListViewItem">
                 <Setter Property="Margin"
-                        Value="0 5"/>
+                        Value="0 5" />
             </Style>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid Grid.Row="0"
               Grid.Column="1"
               Background="White"
               Name="gridMain">
-
         </Grid>
-        
+
         <Grid Grid.Row="0"
               Grid.Column="0">
             <ListView Background="Transparent"
@@ -81,17 +81,17 @@
                 <ListViewItem Tag="VideoUserControl">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="./Images/video_50px.png" />
-                        <TextBlock Text="Video"/>
+                        <TextBlock Text="Video" />
                     </StackPanel>
                 </ListViewItem>
-                
+
                 <ListViewItem Tag="CommonSettingUserControl">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="./Images/gear_50px.png" />
                         <TextBlock Text="Setting" />
                     </StackPanel>
                 </ListViewItem>
-                
+
                 <ListViewItem Tag="HelpUserControl">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="./Images/help_color_50px.png" />

@@ -1,30 +1,32 @@
 ﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Xabe.FFmpeg;
 using RenderVideo.Utils;
-using System.Windows.Media;
-using System.Windows;
-using System.IO;
+using System;
 using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
+using Xabe.FFmpeg;
 
 namespace RenderVideo.ViewModels
 {
     public class VideoViewModel
     {
         #region Model Property
+
         public Models.StatusModel StatusModel { get; set; }
         public Models.VideoModel VideoModel { get; set; }
-        #endregion
+
+        #endregion Model Property
 
         #region Command Property
+
         public MyICommandParamter SelectFileCommand { get; set; }
         public MyICommandParamter CreateVideoCommand { get; set; }
         public MyICommandParamter OpenFileCommand { get; set; }
-        
-        #endregion
+
+        #endregion Command Property
+
         public VideoViewModel()
         {
             StatusModel = new Models.StatusModel();
@@ -45,7 +47,6 @@ namespace RenderVideo.ViewModels
 
         private async void OnCreateVideoCommand(object obj)
         {
-
             if (StatusModel.IsEnable == false)
             {
                 return;
@@ -58,7 +59,6 @@ namespace RenderVideo.ViewModels
 
             StatusModel.FilePath = _output;
             StatusModel.IsEnable = true;
-
         }
 
         private async Task<string> CreateVideo(string _extension = ".mp4")
@@ -71,7 +71,7 @@ namespace RenderVideo.ViewModels
             //check exists
             if (!_inputAudio.IsExists() || !_inputImage.IsExists())
             {
-                SetStatusText("File is not exists!", Brushes.Red);
+                SetStatusText("File audio or image is not exists!", Brushes.Red);
                 return "";
             }
 
@@ -93,7 +93,6 @@ namespace RenderVideo.ViewModels
             {
                 //StatusModel.Percent = args.Percent;
                 StatusModel.Percent = args.Percent;
-
             };
             try
             {
@@ -128,7 +127,6 @@ namespace RenderVideo.ViewModels
             }
 
             return _output2;
-
         }
 
         private void SetStatusText(string _status, Brush brush)

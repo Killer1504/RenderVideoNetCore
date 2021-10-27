@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 
 namespace RenderVideo.Models
 {
     public class VideoSettingModel : INotifyPropertyChanged
     {
-
         private string _logoPath;
 
         private int _videoBitrate;
@@ -29,11 +25,10 @@ namespace RenderVideo.Models
                 if (_id != value)
                 {
                     _id = value;
-                    RaisePropertyChanged(nameof(ID)); 
+                    RaisePropertyChanged(nameof(ID));
                 }
             }
         }
-
 
         public string AudioEncoder
         {
@@ -61,7 +56,6 @@ namespace RenderVideo.Models
             }
         }
 
-
         public string VideoEncoder
         {
             get => _videoEncoder;
@@ -75,8 +69,6 @@ namespace RenderVideo.Models
             }
         }
 
-
-
         public string Resolution
         {
             get => _resolution;
@@ -89,9 +81,6 @@ namespace RenderVideo.Models
                 }
             }
         }
-
-        
-
 
         public int AudioBitrate
         {
@@ -126,8 +115,6 @@ namespace RenderVideo.Models
             }
         }
 
-
-
         public int FrameRate
         {
             get => _frameRate;
@@ -154,13 +141,13 @@ namespace RenderVideo.Models
             }
         }
 
-
-
         public event PropertyChangedEventHandler PropertyChanged;
+
         private void RaisePropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
         public string ToParameter()
         {
             string parameter = $"-c:a {AudioEncoder} -ac {AudioChanel} -ar {AudioSampleRate} -b:a {AudioBitrate}k -c:v {VideoEncoder} " +
@@ -170,7 +157,6 @@ namespace RenderVideo.Models
 
         public VideoSettingModel()
         {
-
             _videoEncoder = "h264";
             _resolution = "1280x720";
             _videoBitrate = 2500;
@@ -180,7 +166,6 @@ namespace RenderVideo.Models
             _audioBitrate = 128;
             _audioSampleRate = 44100;
             _audioChanel = 2;
-
         }
     }
 }

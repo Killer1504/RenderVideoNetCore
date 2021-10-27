@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -10,20 +7,27 @@ namespace RenderVideo.ViewModels
     public class MainWindowViewModel
     {
         #region Model
+
         public Models.MainWindowModel MainWindowModel { get; set; }
         public Models.StatusModel StatusModel { get; set; }
-        #endregion
 
-        #region Command 
+        #endregion Model
+
+        #region Command
+
         public MyICommandParamter ListViewSeletedCommand { get; set; }
         public MyICommandParamter LoadedCommand { get; set; }
         public MyICommandParamter ClosingCommand { get; set; }
-        #endregion
+
+        #endregion Command
 
         #region UserControl
+
         public Views.CommonSettingUserControl CommonSettingUserControl { get; set; }
         public Views.VideoUserControl VideoUserControl { get; set; }
-        #endregion
+
+        #endregion UserControl
+
         public MainWindowViewModel()
         {
             ListViewSeletedCommand = new MyICommandParamter(OnListViewSelectedCommand);
@@ -32,15 +36,13 @@ namespace RenderVideo.ViewModels
 
             MainWindowModel = new Models.MainWindowModel();
             StatusModel = new Models.StatusModel();
-
-
         }
 
         private void OnClosingCommand(object obj)
         {
             var e = obj as System.ComponentModel.CancelEventArgs;
             var result = MessageBox.Show("Do you want to exit?", "Exit", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if(result != MessageBoxResult.Yes)
+            if (result != MessageBoxResult.Yes)
             {
                 e.Cancel = true;
                 return;
@@ -49,7 +51,6 @@ namespace RenderVideo.ViewModels
             {
                 e.Cancel = false;
             }
-
         }
 
         private async void OnLoadedCommand(object obj)
@@ -67,7 +68,6 @@ namespace RenderVideo.ViewModels
 
             _ = _item.Children.Add(VideoUserControl);
             _ = _item.Children.Add(CommonSettingUserControl);
-
         }
 
         private void OnListViewSelectedCommand(object obj)

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace RenderVideo.Models
 {
@@ -28,6 +25,7 @@ namespace RenderVideo.Models
                 }
             }
         }
+
         public string InputImagePath
         {
             get => _inputImagePath;
@@ -40,6 +38,7 @@ namespace RenderVideo.Models
                 }
             }
         }
+
         public string OutputVideoPath
         {
             get => _outputVideoPath;
@@ -66,7 +65,6 @@ namespace RenderVideo.Models
             }
         }
 
-
         public string Title
         {
             get => _title;
@@ -79,6 +77,7 @@ namespace RenderVideo.Models
                 }
             }
         }
+
         public int ID
         {
             get => _id;
@@ -87,23 +86,17 @@ namespace RenderVideo.Models
                 if (_id != value)
                 {
                     _id = value;
-                    RaisePropertyChanged(nameof(ID)); 
+                    RaisePropertyChanged(nameof(ID));
                 }
             }
         }
 
-        
-
-      
-        
-       
-
         public event PropertyChangedEventHandler PropertyChanged;
+
         private void RaisePropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        
 
         public VideoModel()
         {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows;
 
 namespace RenderVideo.ViewModels
@@ -9,11 +6,16 @@ namespace RenderVideo.ViewModels
     public class VideoSettingViewModel
     {
         #region Model Property
+
         public Models.VideoSettingModel VideoSettingModel { get; set; }
-        #endregion
+
+        #endregion Model Property
+
         #region Command Property
+
         public MyICommandParamter UpdateVideoSettingCommand { get; set; }
-        #endregion
+
+        #endregion Command Property
 
         public VideoSettingViewModel()
         {
@@ -36,12 +38,11 @@ namespace RenderVideo.ViewModels
                 _ = MessageBox.Show(datacannotupdate_lan + "!", setting_lan, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
         public async Task Init_Model()
         {
-
             Models.VideoSettingModel videoSettingModel = await API.VideoSettingAPI.LoadSettingAsync();
             VideoSettingModel = videoSettingModel.ID != -1 ? videoSettingModel : new Models.VideoSettingModel();
-
         }
     }
 }
