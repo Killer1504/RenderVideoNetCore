@@ -11,7 +11,7 @@
         WindowState="Normal"
         FontSize="18"
         Name="_this"
-        Width="1280"
+        Width="1200"
         Height="750"
         ResizeMode="NoResize"
         Title="{Binding MainWindowModel.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">

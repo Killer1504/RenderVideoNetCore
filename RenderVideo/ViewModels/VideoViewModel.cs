@@ -41,7 +41,7 @@ namespace RenderVideo.ViewModels
         {
             if (File.Exists(StatusModel.FilePath))
             {
-                _ = Process.Start(new ProcessStartInfo(StatusModel.FilePath) { UseShellExecute = true });
+                _ = Process.Start("explorer.exe", string.Format("/select,\"{0}\"", StatusModel.FilePath));
             }
         }
 

@@ -58,8 +58,6 @@
             </Style>
             <Style TargetType="ProgressBar">
 
-                <Setter Property="Width"
-                        Value="400" />
                 <Setter Property="Height"
                         Value="30" />
             </Style>
@@ -183,14 +181,15 @@
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto" />
-                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <!--Introduction-->
 
                     <!--step 1 choose audio-->
                     <StackPanel Orientation="Vertical"
+                                HorizontalAlignment="Center"
                                 Grid.Row="0"
                                 Grid.Column="0">
                         <StackPanel Orientation="Horizontal">
@@ -226,6 +225,7 @@
 
                     <StackPanel Orientation="Vertical"
                                 Grid.Row="0"
+                                HorizontalAlignment="Right"
                                 Grid.Column="1">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock>
@@ -259,19 +259,9 @@
 
                     <!--action-->
                     <StackPanel Grid.Row="1"
+                                Grid.ColumnSpan="2"
                                 Orientation="Vertical">
                         <!--Create video-->
-                        <StackPanel Orientation="Vertical"
-                                    Visibility="Collapsed">
-                            <TextBlock>
-                                    <Run Text="{DynamicResource Step}" />
-                                    <Run Text="3:" />
-                                    <Run Text="Number Loop" />
-                            </TextBlock>
-                            <TextBox Text="{Binding VideoModel.NumberLoop, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                     Width="50">
-                            </TextBox>
-                        </StackPanel>
 
                         <StackPanel Orientation="Vertical">
                             <TextBlock>
@@ -284,9 +274,11 @@
                                     Command="{Binding CreateVideoCommand}"
                                     IsEnabled="{Binding StatusModel.IsEnable}">
                             </Button>
-                            <Grid HorizontalAlignment="Left"
-                                  Margin="5">
+                            <Grid HorizontalAlignment="Stretch"
+                                  Margin="5"
+                                  >
                                 <ProgressBar VerticalAlignment="Center"
+                                             HorizontalAlignment="Stretch"
                                              Name="progressBar"
                                              Minimum="0"
                                              Maximum="100"
@@ -294,8 +286,8 @@
                                 </ProgressBar>
                                 <TextBlock VerticalAlignment="Center"
                                            HorizontalAlignment="Center">
-                            <Run Text="{Binding ElementName=progressBar, Path=Value}" />
-                            <Run Text="%" />
+                                            <Run Text="{Binding ElementName=progressBar, Path=Value}" />
+                                            <Run Text="%" />
                                 </TextBlock>
                             </Grid>
                         </StackPanel>
