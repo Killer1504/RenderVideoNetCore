@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.IO;
 
 namespace RenderVideo.Models
 {
@@ -12,6 +13,22 @@ namespace RenderVideo.Models
         private string _outputVideoPath;
         private string _inputImagePath;
         private int _numberLoop;
+
+        private int _zIndex;
+
+        public int ZIndex
+        {
+            get => _zIndex;
+            set
+            {
+                if (_zIndex != value)
+                {
+                    _zIndex = value;
+                    RaisePropertyChanged(nameof(ZIndex));
+                }
+            }
+        }
+
 
         public int NumberLoop
         {
@@ -35,6 +52,7 @@ namespace RenderVideo.Models
                 {
                     _inputImagePath = value;
                     RaisePropertyChanged(nameof(InputImagePath));
+                    ZIndex = File.Exists(value) ? 0 : 1;
                 }
             }
         }
@@ -101,6 +119,7 @@ namespace RenderVideo.Models
         public VideoModel()
         {
             _numberLoop = 10;
+            _zIndex = 1;
         }
     }
 }

@@ -131,7 +131,7 @@ namespace RenderVideo.Models
             _foreGroundColor = Brushes.Green;
             _executionTime = 0;
             _fontSize = 14;
-            _status = "......";
+            _status = "Ready!!!";
             _percent = 0;
         }
     }

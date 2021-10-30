@@ -6,11 +6,18 @@
              xmlns:local="clr-namespace:RenderVideo.Views"
              xmlns:viewModels="clr-namespace:RenderVideo.ViewModels"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d"
              FontSize="16">
     <UserControl.DataContext>
         <viewModels:VideoSettingViewModel />
     </UserControl.DataContext>
+    <behaviors:Interaction.Triggers>
+        <behaviors:EventTrigger EventName="Loaded">
+            <behaviors:CallMethodAction MethodName="OnLoadData"
+                                        TargetObject="{Binding}" />
+        </behaviors:EventTrigger>
+    </behaviors:Interaction.Triggers>
     <Grid>
         <Grid.Resources>
             <Style TargetType="TextBlock"

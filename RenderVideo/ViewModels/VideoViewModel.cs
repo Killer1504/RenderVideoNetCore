@@ -24,17 +24,51 @@ namespace RenderVideo.ViewModels
         public MyICommandParamter SelectFileCommand { get; set; }
         public MyICommandParamter CreateVideoCommand { get; set; }
         public MyICommandParamter OpenFileCommand { get; set; }
+        public MyICommandParamter DropFileCommand { get; set; }
 
         #endregion Command Property
 
         public VideoViewModel()
         {
-            StatusModel = new Models.StatusModel();
-            VideoModel = new Models.VideoModel();
+            Init_Command();
+            Init_Model();
+        }
 
+        public void OnLoadData()
+        {
+        }
+
+        private void Init_Command()
+        {
             SelectFileCommand = new MyICommandParamter(OnSelectFileCommand);
             CreateVideoCommand = new MyICommandParamter(OnCreateVideoCommand);
             OpenFileCommand = new MyICommandParamter(OnOpenFileCommand);
+            DropFileCommand = new MyICommandParamter(OnDropFileCommand);
+        }
+
+        private void OnDropFileCommand(object obj)
+        {
+            DragEventArgs e = obj as System.Windows.DragEventArgs;
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                // Note that you can have more than one file.
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                if (files != null && files.Length > 0)
+                {
+                    string extension = Path.GetExtension(files[0]);
+                    if (extension.Contains(".jpg") || extension.Contains(".png"))
+                    {
+                        VideoModel.InputImagePath = files[0];
+
+                    }
+                }
+            }
+        }
+
+        private void Init_Model()
+        {
+            StatusModel = new Models.StatusModel();
+            VideoModel = new Models.VideoModel();
         }
 
         private void OnOpenFileCommand(object obj)
@@ -53,10 +87,14 @@ namespace RenderVideo.ViewModels
             }
             StatusModel.IsEnable = false;
             StatusModel.Percent = 0;
+            StatusModel.ExecutionTime = 0;
             StatusModel.FilePath = "";
+            Stopwatch watch = Stopwatch.StartNew();
 
             string _output = await CreateVideo();
 
+            watch.Stop();
+            StatusModel.ExecutionTime = Convert.ToInt32(watch.ElapsedMilliseconds / 1000);
             StatusModel.FilePath = _output;
             StatusModel.IsEnable = true;
         }
@@ -96,7 +134,7 @@ namespace RenderVideo.ViewModels
             };
             try
             {
-                SetStatusText("Create video ...", Brushes.Green);
+                SetStatusText("We are creating video, please wait ...", Brushes.Green);
                 _ = await convertsion1.Start(argument);
                 SetStatusText("Finish!", Brushes.Green);
             }

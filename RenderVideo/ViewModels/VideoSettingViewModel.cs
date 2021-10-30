@@ -1,13 +1,26 @@
-﻿using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using System.Windows;
 
 namespace RenderVideo.ViewModels
 {
-    public class VideoSettingViewModel
+    public class VideoSettingViewModel : INotifyPropertyChanged
     {
         #region Model Property
 
-        public Models.VideoSettingModel VideoSettingModel { get; set; }
+        private Models.VideoSettingModel _videoSettingModel;
+
+        public Models.VideoSettingModel VideoSettingModel
+        {
+            get => _videoSettingModel;
+            set
+            {
+                if (_videoSettingModel != value)
+                {
+                    _videoSettingModel = value;
+                    RaisePropertyChanged(nameof(VideoSettingModel));
+                }
+            }
+        }
 
         #endregion Model Property
 
@@ -15,12 +28,35 @@ namespace RenderVideo.ViewModels
 
         public MyICommandParamter UpdateVideoSettingCommand { get; set; }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void RaisePropertyChanged(string _propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(_propertyName));
+        }
+
         #endregion Command Property
 
         public VideoSettingViewModel()
         {
+            Init_Command();
+            Init_Model();
+        }
+
+        private void Init_Command()
+        {
             UpdateVideoSettingCommand = new MyICommandParamter(OnUpdateSettingCommand);
-            _ = Init_Model();
+        }
+
+        private void Init_Model()
+        {
+            VideoSettingModel = new Models.VideoSettingModel();
+        }
+
+        public async void OnLoadData()
+        {
+            Models.VideoSettingModel videoSettingModel = await API.VideoSettingAPI.LoadSettingAsync();
+            VideoSettingModel = videoSettingModel.ID != -1 ? videoSettingModel : new Models.VideoSettingModel();
         }
 
         private async void OnUpdateSettingCommand(object obj)
@@ -37,12 +73,6 @@ namespace RenderVideo.ViewModels
                 string datacannotupdate_lan = Application.Current.Resources["DataSettingCannotUpdate"].ToString();
                 _ = MessageBox.Show(datacannotupdate_lan + "!", setting_lan, MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        public async Task Init_Model()
-        {
-            Models.VideoSettingModel videoSettingModel = await API.VideoSettingAPI.LoadSettingAsync();
-            VideoSettingModel = videoSettingModel.ID != -1 ? videoSettingModel : new Models.VideoSettingModel();
         }
     }
 }
