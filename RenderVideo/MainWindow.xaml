@@ -10,9 +10,9 @@
         WindowState="Normal"
         FontSize="18"
         Name="_this"
-        Width="1200"
-        Height="750"
-        ResizeMode="CanResizeWithGrip"
+        Width="1280"
+        Height="720"
+        ResizeMode="NoResize"
         Title="{Binding MainWindowModel.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
     <behaviors:Interaction.Triggers>
         <behaviors:EventTrigger EventName="Loaded"
@@ -51,6 +51,7 @@
             <ListView Background="Transparent"
                       BorderThickness="0"
                       Name="lvMenu"
+                      SelectedIndex="0"
                       FontStyle="Normal">
                 <!--using behavior XamlBehaviorsWpf to binding command with event-->
                 <behaviors:Interaction.Triggers>
@@ -74,6 +75,17 @@
                                 Value="5" />
                         <Setter Property="Width"
                                 Value="30" />
+                    </Style>
+                    <Style TargetType="ListViewItem">
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected"
+                                     Value="True">
+                                <Setter Property="FontWeight"
+                                        Value="SemiBold" />
+                                <Setter Property="FontStyle"
+                                        Value="Italic" />
+                            </Trigger>
+                        </Style.Triggers>
                     </Style>
                 </ListView.Resources>
 

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -26,18 +27,31 @@ namespace RenderVideo.ViewModels
         public Views.CommonSettingUserControl CommonSettingUserControl { get; set; }
         public Views.VideoUserControl VideoUserControl { get; set; }
 
+        public List<UserControl> userControls = new List<UserControl>();
+
         #endregion UserControl
 
         public MainWindowViewModel()
         {
-            ListViewSeletedCommand = new MyICommandParamter(OnListViewSelectedCommand);
-            LoadedCommand = new MyICommandParamter(OnLoadedCommand);
-            ClosingCommand = new MyICommandParamter(OnClosingCommand);
 
+            Init_Command();
+            Init_Model();
+           
+        }
+
+        private void Init_Model()
+        {
             MainWindowModel = new Models.MainWindowModel();
             StatusModel = new Models.StatusModel();
         }
 
+        private void Init_Command()
+        {
+            ListViewSeletedCommand = new MyICommandParamter(OnListViewSelectedCommand);
+            LoadedCommand = new MyICommandParamter(OnLoadedCommand);
+            ClosingCommand = new MyICommandParamter(OnClosingCommand);
+        }
+       
         private void OnClosingCommand(object obj)
         {
             var e = obj as System.ComponentModel.CancelEventArgs;
@@ -63,8 +77,11 @@ namespace RenderVideo.ViewModels
         {
             await Task.Delay(1);
 
-            VideoUserControl = new Views.VideoUserControl() { Visibility = Visibility.Visible };
-            CommonSettingUserControl = new Views.CommonSettingUserControl() { Visibility = Visibility.Collapsed };
+            VideoUserControl = new Views.VideoUserControl() { Visibility = Visibility.Visible , Tag = nameof(VideoUserControl) };
+            CommonSettingUserControl = new Views.CommonSettingUserControl() { Visibility = Visibility.Collapsed, Tag = nameof(CommonSettingUserControl) };
+
+            userControls.Add(VideoUserControl);
+            userControls.Add(CommonSettingUserControl);
 
             _ = _item.Children.Add(VideoUserControl);
             _ = _item.Children.Add(CommonSettingUserControl);
@@ -82,24 +99,15 @@ namespace RenderVideo.ViewModels
             Visibility collapsed = Visibility.Collapsed;
             Visibility visible = Visibility.Visible;
 
-            CommonSettingUserControl.Visibility = collapsed;
-            VideoUserControl.Visibility = collapsed;
-
-            switch (_tag)
+            foreach (UserControl item in userControls)
             {
-                case "CommonSettingUserControl":
-                    {
-                        CommonSettingUserControl.Visibility = visible;
-                        break;
-                    }
-                case "VideoUserControl":
-                    {
-                        VideoUserControl.Visibility = visible;
-                        break;
-                    }
-
-                default:
-                    break;
+                string tagUserControl = item.Tag.ToString();
+                if (tagUserControl.ToLower() == _tag.ToLower())
+                {
+                    item.Visibility = visible;
+                    continue;
+                }
+                item.Visibility = collapsed;
             }
         }
     }

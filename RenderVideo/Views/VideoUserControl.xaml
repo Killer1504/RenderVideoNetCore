@@ -6,6 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:local="clr-namespace:RenderVideo"
              xmlns:viewModels="clr-namespace:RenderVideo.ViewModels"
+             xmlns:wpfTool="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:views="clr-namespace:RenderVideo.Views"
              mc:Ignorable="d">
     <UserControl.DataContext>
@@ -18,10 +19,6 @@
         <behaviors:EventTrigger EventName="Loaded">
             <behaviors:CallMethodAction MethodName="OnLoadData"
                                         TargetObject="{Binding}" />
-        </behaviors:EventTrigger>
-        <behaviors:EventTrigger EventName="Drop">
-            <behaviors:InvokeCommandAction Command="{Binding DropFileCommand}"
-                                           PassEventArgsToCommand="True" />
         </behaviors:EventTrigger>
 
     </behaviors:Interaction.Triggers>
@@ -161,7 +158,6 @@
                     <TextBox  Text="{Binding StatusModel.FilePath}"
                               IsReadOnly="False"
                               Padding="5 0"
-                              AcceptsReturn="True"
                               Width="250"
                               Height="30"
                               ToolTip="Ctrl + O"
@@ -203,7 +199,11 @@
                         <Run Text=":" />
                     </TextBlock>
                     <TextBlock>
-                        <TextBlock Text="{Binding StatusModel.ExecutionTime, StringFormat={}{00}s}" />
+                        <TextBlock >
+                            <Run Text="{Binding StatusModel.ExecutionTime, StringFormat=d2}"
+                                 FontWeight="SemiBold"/>
+                            <Run Text="s"/>
+                        </TextBlock>
                     </TextBlock>
                 </StackPanel>
             </StackPanel>
@@ -252,6 +252,35 @@
                                 IsEnabled="{Binding StatusModel.IsEnable}">
                         </Button>
                     </StackPanel>
+                    <Label Width="{Binding ElementName=boderImage, Path=ActualWidth}"
+                           Height="{Binding ElementName=boderImage, Path=ActualHeight}"
+                           Background="LightGray"
+                           Margin="{Binding ElementName=boderImage, Path=Margin}"
+                           VerticalContentAlignment="Center"
+                           HorizontalContentAlignment="Center"
+                           AllowDrop="True"
+                           >
+                        <behaviors:Interaction.Triggers>
+                            <behaviors:EventTrigger EventName="Drop">
+                                <behaviors:InvokeCommandAction Command="{Binding DropAudioCommand}"
+                                                               PassEventArgsToCommand="True" />
+                            </behaviors:EventTrigger>
+
+                        </behaviors:Interaction.Triggers>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Image Source="../Images/upload.png"
+                                       Width="50"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <TextBlock Text="Drag audio here" />
+                            </Grid>
+                        </Grid>
+                    </Label>
                     <Grid>
                         <views:MediaPlayerUserControl UriPath="{Binding ElementName=txtAudioPath, Path=Text}"
                                                       Margin="5"
@@ -284,11 +313,26 @@
                         </Button>
                     </StackPanel>
                     <Grid AllowDrop="True">
-                        <TextBlock Text="Drag image here"
-                                   VerticalAlignment="Center"
-                                   HorizontalAlignment="Center"
-                                   Foreground="Black"
-                                   Panel.ZIndex="{Binding VideoModel.ZIndex}"/>
+                        <behaviors:Interaction.Triggers>
+                            <behaviors:EventTrigger EventName="Drop">
+                                <behaviors:InvokeCommandAction Command="{Binding DropImageCommand}"
+                                                               PassEventArgsToCommand="True" />
+                            </behaviors:EventTrigger>
+
+                        </behaviors:Interaction.Triggers>
+                        <StackPanel Panel.ZIndex="{Binding VideoModel.ZIndex}"
+                                    VerticalAlignment="Center">
+                            <Grid Grid.Row="0">
+                                <Image Source="../Images/upload.png"
+                                       Width="50" />
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <TextBlock Text="Drag image here"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           Foreground="Black" />
+                            </Grid>
+                        </StackPanel>
                         <Border Width="430"
                                 Name="boderImage"
                                 Margin="5"
@@ -336,7 +380,16 @@
                                 <Run Text="3:" />
                                 <Run Text="Create Video" />
                         </TextBlock>
-                        <Button Content="Create Video 1 hour"
+                        <TextBlock Text="Number Loop:"/>
+                        <wpfTool:IntegerUpDown Value="{Binding VideoModel.NumberLoop}"
+                                               HorizontalAlignment="Left"
+                                               Margin="5 0"
+                                               Minimum="1"
+                                               Maximum="100"
+                                               Width="110">
+
+                        </wpfTool:IntegerUpDown>
+                        <Button Content="Create Video"
                                 Width="auto"
                                 Command="{Binding CreateVideoCommand}"
                                 IsEnabled="{Binding StatusModel.IsEnable}">

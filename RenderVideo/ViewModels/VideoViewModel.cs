@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using RenderVideo.Utils;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -24,7 +25,8 @@ namespace RenderVideo.ViewModels
         public MyICommandParamter SelectFileCommand { get; set; }
         public MyICommandParamter CreateVideoCommand { get; set; }
         public MyICommandParamter OpenFileCommand { get; set; }
-        public MyICommandParamter DropFileCommand { get; set; }
+        public MyICommandParamter DropImageCommand { get; set; }
+        public MyICommandParamter DropAudioCommand { get; set; }
 
         #endregion Command Property
 
@@ -43,10 +45,11 @@ namespace RenderVideo.ViewModels
             SelectFileCommand = new MyICommandParamter(OnSelectFileCommand);
             CreateVideoCommand = new MyICommandParamter(OnCreateVideoCommand);
             OpenFileCommand = new MyICommandParamter(OnOpenFileCommand);
-            DropFileCommand = new MyICommandParamter(OnDropFileCommand);
+            DropImageCommand = new MyICommandParamter(OnDropImageCommand);
+            DropAudioCommand = new MyICommandParamter(OnDropAudioCommand);
         }
 
-        private void OnDropFileCommand(object obj)
+        private void OnDropAudioCommand(object obj)
         {
             DragEventArgs e = obj as System.Windows.DragEventArgs;
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -56,7 +59,26 @@ namespace RenderVideo.ViewModels
                 if (files != null && files.Length > 0)
                 {
                     string extension = Path.GetExtension(files[0]);
-                    if (extension.Contains(".jpg") || extension.Contains(".png"))
+                    if (extension == ".mp3" || extension == ".wav")
+                    {
+                        VideoModel.InputAudioPath = files[0];
+
+                    }
+                }
+            }
+        }
+
+        private void OnDropImageCommand(object obj)
+        {
+            DragEventArgs e = obj as System.Windows.DragEventArgs;
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                // Note that you can have more than one file.
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                if (files != null && files.Length > 0)
+                {
+                    string extension = Path.GetExtension(files[0]);
+                    if (extension == ".jpg" || extension == ".png")
                     {
                         VideoModel.InputImagePath = files[0];
 
@@ -89,17 +111,24 @@ namespace RenderVideo.ViewModels
             StatusModel.Percent = 0;
             StatusModel.ExecutionTime = 0;
             StatusModel.FilePath = "";
-            Stopwatch watch = Stopwatch.StartNew();
+            System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
+            dispatcherTimer.Tick += (_, __) =>
+            {
+                StatusModel.ExecutionTime++;
+            };
+            dispatcherTimer.Start();
 
-            string _output = await CreateVideo();
+            string _output = await CreateVideoAsync();
 
-            watch.Stop();
-            StatusModel.ExecutionTime = Convert.ToInt32(watch.ElapsedMilliseconds / 1000);
+            dispatcherTimer.Stop();
             StatusModel.FilePath = _output;
             StatusModel.IsEnable = true;
         }
 
-        private async Task<string> CreateVideo(string _extension = ".mp4")
+        private async Task<string> CreateVideoAsync(string _extension = ".mp4")
         {
             await Task.Delay(1);
 
@@ -109,7 +138,7 @@ namespace RenderVideo.ViewModels
             //check exists
             if (!_inputAudio.IsExists() || !_inputImage.IsExists())
             {
-                SetStatusText("File audio or image is not exists!", Brushes.Red);
+                SetStatusText("File audio or image is not exists!", Brushes.Red, true);
                 return "";
             }
 
@@ -127,6 +156,7 @@ namespace RenderVideo.ViewModels
                 $" {_parameter}   \"{_output1}\""; ;
 
             IConversion convertsion1 = FFmpeg.Conversions.New();
+
             convertsion1.OnProgress += (_, args) =>
             {
                 //StatusModel.Percent = args.Percent;
@@ -136,26 +166,26 @@ namespace RenderVideo.ViewModels
             {
                 SetStatusText("We are creating video, please wait ...", Brushes.Green);
                 _ = await convertsion1.Start(argument);
-                SetStatusText("Finish!", Brushes.Green);
+                //SetStatusText("Finish!", Brushes.Green);
             }
             catch (Exception)
             {
                 string _cantCreateVideo = Application.Current.Resources["CannotCreateVideo"].ToString();
-                SetStatusText(_cantCreateVideo, Brushes.Red);
+                SetStatusText(_cantCreateVideo, Brushes.Red, true);
                 _output1 = "";
             }
 
             //loop Video
             IMediaInfo mediaInfo = await FFmpeg.GetMediaInfo(_output1);
             double _duration = mediaInfo.Duration.TotalSeconds;
-            VideoModel.NumberLoop = (int)(3600 / _duration) + 1;
             string _output2 = Path.Combine(_dir, DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss") + _extension);
             string _argurment2 = $" -stream_loop {VideoModel.NumberLoop} -i \"{_output1}\"  -c copy \"{_output2}\" ";
+
             try
             {
                 SetStatusText("Loop Video ...", Brushes.Green);
                 _ = await convertsion1.Start(_argurment2);
-                SetStatusText("Finish!", Brushes.Green);
+                SetStatusText("Finish!", Brushes.Green, true);
             }
             catch (Exception)
             {
@@ -167,13 +197,17 @@ namespace RenderVideo.ViewModels
             return _output2;
         }
 
-        private void SetStatusText(string _status, Brush brush)
+        private void SetStatusText(string _status, Brush brush, bool isNotice = false)
         {
             StatusModel.Status = _status;
             StatusModel.ForeGroundColor = brush;
-            if (brush == Brushes.Red)
+            if (brush == Brushes.Red && isNotice)
             {
                 _ = MessageBox.Show(_status, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else if (brush == Brushes.Green && isNotice)
+            {
+                _ = MessageBox.Show(_status, "Info", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
